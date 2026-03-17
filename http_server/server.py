@@ -26,5 +26,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP) as so
                 stream = conn.recv(1024)
                 if not stream:
                     break
-                http_parser(stream)
+                res = http_parser(stream)
+                print(res)
                 conn.sendall(sample_response)
