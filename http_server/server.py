@@ -1,4 +1,5 @@
 import socket
+from router import route_request
 from utils import http_parser
 
 # HTTP Request:
@@ -27,5 +28,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP) as so
                 if not stream:
                     break
                 res = http_parser(stream)
-                print(res)
+                if "firstline" not in res:
+                    print("Error, couldn't parse first line of request.")
+                    continue
+                uri = res["firstline"].get("req_uri", b"")
+                method = res["firstline"].get("method", b"")
+                status_code, response = route_request(uri, method)
+                print(status_code, response)
                 conn.sendall(sample_response)
